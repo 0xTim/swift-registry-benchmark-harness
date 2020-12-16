@@ -1,21 +1,38 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.2
 import PackageDescription
 
 let package = Package(
-  name: "Example",
-  platforms: [.macOS(.v10_15)],
-  dependencies: [
-    .package(name: "Alamofire", url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: "5.4.0")),
-    .package(name: "SwiftyJSON", url: "https://github.com/SwiftyJSON/SwiftyJSON", .upToNextMajor(from: "5.0.0")),
-    .package(name: "Charts", url: "https://github.com/danielgindi/Charts", .upToNextMajor(from: "3.5.0"))
-  ],
-  targets: [
-    .target(
-      name: "Example",
-      dependencies: [
-        .product(name: "Alamofire", package: "Alamofire"),
-        .product(name: "SwiftyJSON", package: "SwiftyJSON"),
-        .product(name: "Charts", package: "Charts")
-      ])
-  ]
+    name: "SwiftRegistryBenchmark",
+    platforms: [
+       .macOS(.v10_15)
+    ],
+    dependencies: [
+        // 💧 A server-side Swift web framework.
+        .package(url: "https://github.com/vapor/vapor", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent-postgres-driver", from: "2.0.0"),
+        .package(url: "https://github.com/vapor/leaf", from: "4.0.0"),
+    ],
+    targets: [
+        .target(
+            name: "App",
+            dependencies: [
+                .product(name: "Fluent", package: "fluent"),
+                .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
+                .product(name: "Leaf", package: "leaf"),
+                .product(name: "Vapor", package: "vapor")
+            ],
+            swiftSettings: [
+                // Enable better optimizations when building in Release configuration. Despite the use of
+                // the `.unsafeFlags` construct required by SwiftPM, this flag is recommended for Release
+                // builds. See <https://github.com/swift-server/guides#building-for-production> for details.
+                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release))
+            ]
+        ),
+        .target(name: "Run", dependencies: [.target(name: "App")]),
+        .testTarget(name: "AppTests", dependencies: [
+            .target(name: "App"),
+            .product(name: "XCTVapor", package: "vapor"),
+        ])
+    ]
 )
