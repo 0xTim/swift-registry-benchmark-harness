@@ -8,10 +8,10 @@ let package = Package(
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor", from: "4.0.0"),
-        .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
-        .package(url: "https://github.com/vapor/fluent-postgres-driver", from: "2.0.0"),
-        .package(url: "https://github.com/vapor/leaf", from: "4.0.0"),
+        .package(url: "https://github.com/0xTim/vapor", from: "4.0.0"),
+        .package(url: "https://github.com/0xTim/fluent", from: "4.0.0"),
+        .package(url: "https://github.com/0xTim/fluent-postgres-driver", from: "2.0.0"),
+        .package(url: "https://github.com/0xTim/leaf", from: "4.0.0"),
     ],
     targets: [
         .target(
